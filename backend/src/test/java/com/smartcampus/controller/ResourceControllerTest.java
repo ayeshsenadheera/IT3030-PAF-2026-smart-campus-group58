@@ -1,4 +1,4 @@
-package com.smartcampus.controller;
+package test.java.com.smartcampus.controller;
 
 public class ResourceControllerTest {
     
