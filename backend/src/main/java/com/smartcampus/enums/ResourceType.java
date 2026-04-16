@@ -1,5 +1,2 @@
 package com.smartcampus.enums;
-
-public class ResourceType {
-    
-}
+public enum ResourceType { ROOM, LAB, EQUIPMENT }
