@@ -3,6 +3,7 @@ package com.smartcampus.dto.request;
 import com.smartcampus.enums.ResourceStatus;
 import com.smartcampus.enums.ResourceType;
 
+@Data
 public class ResourceRequest {
     
     @NotBlank(message = "Resource name is required")
