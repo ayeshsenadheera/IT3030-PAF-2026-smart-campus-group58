@@ -9,4 +9,8 @@ public class ResourceRequest {
 
     @NotNull(message = "Resource type is required")
     private ResourceType type;
+
+    @Min(value = 1, message = "Capacity must be at least 1")
+    private Integer capacity;
+
 }
