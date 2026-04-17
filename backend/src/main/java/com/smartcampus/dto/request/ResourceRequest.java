@@ -13,4 +13,7 @@ public class ResourceRequest {
     @Min(value = 1, message = "Capacity must be at least 1")
     private Integer capacity;
 
+    @NotBlank(message = "Location is required")
+    private String location;
+
 }
