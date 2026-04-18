@@ -2,10 +2,14 @@ package com.smartcampus.dto.request;
 
 import com.smartcampus.enums.ResourceStatus;
 import com.smartcampus.enums.ResourceType;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 @Data
 public class ResourceRequest {
-    
+
     @NotBlank(message = "Resource name is required")
     private String name;
 
@@ -29,5 +33,4 @@ public class ResourceRequest {
     private ResourceStatus status;
 
     private String imageUrl;
-
 }

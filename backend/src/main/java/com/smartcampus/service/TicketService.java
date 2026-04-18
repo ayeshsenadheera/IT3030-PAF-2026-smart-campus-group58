@@ -1,6 +1,3 @@
-
-
-
 package com.smartcampus.service;
 
 import com.smartcampus.dto.request.CommentRequest;
@@ -154,14 +151,12 @@ public class TicketService {
 
         Comment saved = commentRepository.save(comment);
 
-        // Notify ticket creator if commenter is someone else
         if (!ticket.getCreatedBy().getId().equals(authorId) && !internal) {
             notificationService.send(ticket.getCreatedBy().getId(), NotificationType.COMMENT_ADDED,
                     "New Comment on Your Ticket",
                     author.getFullName() + " commented on ticket: " + ticket.getTitle(),
                     "TICKET", ticketId);
         }
-        // Notify assigned technician
         if (ticket.getAssignedTo() != null && !ticket.getAssignedTo().getId().equals(authorId)) {
             notificationService.send(ticket.getAssignedTo().getId(), NotificationType.COMMENT_ADDED,
                     "New Comment on Assigned Ticket",
@@ -210,7 +205,6 @@ public class TicketService {
         Comment saved = commentRepository.save(comment);
         return toCommentResponse(saved);
     }
-
 
     private void validateStatusTransition(TicketStatus current, TicketStatus next) {
         boolean valid = switch (current) {
