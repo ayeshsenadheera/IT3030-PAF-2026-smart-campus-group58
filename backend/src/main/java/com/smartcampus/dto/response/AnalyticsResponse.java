@@ -33,6 +33,3 @@ public class AnalyticsResponse {
         private Long   bookingCount;
     }
 }
-  {
-    
-}

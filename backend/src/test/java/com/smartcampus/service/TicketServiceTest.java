@@ -1,8 +1,5 @@
 package com.smartcampus.service;
 
-
-
-// imports libraries
 import com.smartcampus.dto.request.CommentRequest;
 import com.smartcampus.dto.request.TicketRequest;
 import com.smartcampus.dto.request.TicketUpdateRequest;
@@ -43,7 +40,6 @@ class TicketServiceTest {
     @Mock private ResourceRepository  resourceRepository;
     @Mock private NotificationService notificationService;
     @Mock private ResourceService     resourceService;
-
 
     @InjectMocks
     private TicketService ticketService;
@@ -90,7 +86,6 @@ class TicketServiceTest {
     @Test
     @DisplayName("Should throw BadRequestException on invalid status transition")
     void update_shouldThrow_whenInvalidTransition() {
-        // OPEN → CLOSED is invalid (must go OPEN → IN_PROGRESS → RESOLVED → CLOSED)
         ticket.setStatus(TicketStatus.OPEN);
         when(ticketRepository.findById(20L)).thenReturn(Optional.of(ticket));
 
@@ -133,7 +128,6 @@ class TicketServiceTest {
 
         when(commentRepository.findById(50L)).thenReturn(Optional.of(comment));
 
-        // User 1L tries to delete comment owned by 99L, not admin
         assertThatThrownBy(() -> ticketService.deleteComment(50L, 1L, false))
                 .isInstanceOf(AccessDeniedException.class);
     }
@@ -157,7 +151,6 @@ class TicketServiceTest {
     @Test
     @DisplayName("Should reject adding more than 3 images to a ticket")
     void addImages_shouldThrow_whenExceedsThreeImages() {
-        // Ticket already has 3 images
         ticket.getImages().add(com.smartcampus.entity.TicketImage.builder().imageUrl("url1").build());
         ticket.getImages().add(com.smartcampus.entity.TicketImage.builder().imageUrl("url2").build());
         ticket.getImages().add(com.smartcampus.entity.TicketImage.builder().imageUrl("url3").build());
