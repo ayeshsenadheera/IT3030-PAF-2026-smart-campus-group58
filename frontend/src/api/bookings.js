@@ -5,6 +5,6 @@ export const bookingsApi = {
   getAll: (params) => api.get('/bookings', { params }),
   getMy: (params) => api.get('/bookings/my', { params }),
   getById: (id) => api.get(`/bookings/${id}`),
-  processAction: (id, data) => api.put(`/bookings/${id}/action`, data),
+  //processAction: (id, data) => api.put(`/bookings/${id}/action`, data),
   cancel: (id) => api.patch(`/bookings/${id}/cancel`),
 }
