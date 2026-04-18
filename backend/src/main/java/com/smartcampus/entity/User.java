@@ -58,5 +58,8 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 1c589c776c06fc2ef5639e3dc2ad9d2a09b74c3c
