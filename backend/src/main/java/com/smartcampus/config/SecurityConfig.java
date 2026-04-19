@@ -59,7 +59,12 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/oauth2/**", "/login/**").permitAll()
                 // Public auth endpoints
-                .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/forgot-password").permitAll()
+                .requestMatchers(
+                    "/api/auth/login",
+                    "/api/auth/register",
+                    "/api/auth/forgot-password",
+                    "/api/auth/reset-password"   // ← added
+                ).permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/resources", "/api/resources/**").permitAll()
                 .requestMatchers(HttpMethod.POST,   "/api/resources/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT,    "/api/resources/**").hasRole("ADMIN")
@@ -98,4 +103,3 @@ public class SecurityConfig {
         return source;
     }
 }
-
