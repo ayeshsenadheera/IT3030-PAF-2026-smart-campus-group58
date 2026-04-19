@@ -153,9 +153,10 @@ function SignInView({ setView }) {
         <p className="text-sm text-slate-500">Sign in to your CampusFlow account</p>
       </div>
 
+      {/* ✅ FIX: SocialBtn now receives onClick — no more wrapping <a> tag */}
       <div className="space-y-2.5 mb-5">
-        <a href={GOOGLE_URL}><SocialBtn icon={<GIcon />} label="Continue with Google" /></a>
-        <a href={MICROSOFT_URL}><SocialBtn icon={<MsIcon />} label="Continue with Microsoft / SLIIT" /></a>
+        <SocialBtn icon={<GIcon />}  label="Continue with Google"         onClick={() => { window.location.href = GOOGLE_URL }} />
+        <SocialBtn icon={<MsIcon />} label="Continue with Microsoft / SLIIT" onClick={() => { window.location.href = MICROSOFT_URL }} />
       </div>
 
       <Divider text="or sign in with email" />
@@ -225,9 +226,10 @@ function RegisterView({ setView }) {
         <p className="text-sm text-slate-500">Join CampusFlow today</p>
       </div>
 
+      {/* ✅ FIX: SocialBtn now receives onClick — no more wrapping <a> tag */}
       <div className="space-y-2.5 mb-5">
-        <a href={GOOGLE_URL}><SocialBtn icon={<GIcon />} label="Sign up with Google" /></a>
-        <a href={MICROSOFT_URL}><SocialBtn icon={<MsIcon />} label="Sign up with Microsoft / SLIIT" /></a>
+        <SocialBtn icon={<GIcon />}  label="Sign up with Google"            onClick={() => { window.location.href = GOOGLE_URL }} />
+        <SocialBtn icon={<MsIcon />} label="Sign up with Microsoft / SLIIT" onClick={() => { window.location.href = MICROSOFT_URL }} />
       </div>
 
       <Divider text="or register with email" />
@@ -350,11 +352,17 @@ function ForgotSentView({ setView }) {
 }
 
 /* ── REUSABLE UI ──────────────────────────────────────────── */
-function SocialBtn({ icon, label }) {
+
+// ✅ FIX: SocialBtn now accepts an onClick prop so navigation actually works
+function SocialBtn({ icon, label, onClick }) {
   return (
-    <button type="button" className="w-full flex items-center justify-center gap-3 px-4 py-2.5
-      bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700
-      hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm active:scale-[0.98]">
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full flex items-center justify-center gap-3 px-4 py-2.5
+        bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700
+        hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm active:scale-[0.98]"
+    >
       {icon}{label}
     </button>
   )
