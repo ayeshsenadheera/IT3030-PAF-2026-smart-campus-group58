@@ -8,6 +8,7 @@ import AppLayout             from '@/components/layout/AppLayout'
 import LandingPage                 from '@/pages/LandingPage'
 import LoginPage                   from '@/pages/LoginPage'
 import OAuth2Redirect              from '@/pages/OAuth2Redirect'
+import ResetPasswordPage           from '@/pages/ResetPasswordPage'
 import HomePage                    from '@/pages/HomePage'
 import DashboardPage               from '@/pages/dashboard/DashboardPage'
 import ResourcesPage               from '@/pages/resources/ResourcesPage'
@@ -32,9 +33,10 @@ export default function App() {
     <AuthProvider>
       <Routes>
         {/* Public */}
-        <Route path="/"                element={<LandingPage />} />
-        <Route path="/login"           element={<LoginPage />} />
-        <Route path="/oauth2/redirect"  element={<OAuth2Redirect />} />
+        <Route path="/"                  element={<LandingPage />} />
+        <Route path="/login"             element={<LoginPage />} />
+        <Route path="/oauth2/redirect"   element={<OAuth2Redirect />} />
+        <Route path="/reset-password"    element={<ResetPasswordPage />} />
 
         {/* Protected */}
         <Route element={<ProtectedRoute />}>

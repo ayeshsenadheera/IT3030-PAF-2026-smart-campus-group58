@@ -41,6 +41,12 @@ public class User {
     @Builder.Default
     private Boolean isActive = true;
 
+    /** Password reset token (null when not requested) */
+    private String resetToken;
+
+    /** Expiry time for the reset token */
+    private LocalDateTime resetTokenExpiry;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",

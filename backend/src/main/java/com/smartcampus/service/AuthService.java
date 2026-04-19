@@ -13,12 +13,17 @@ import com.smartcampus.repository.UserRepository;
 import com.smartcampus.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -30,6 +35,10 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
     private final UserService      userService;
+    private final JavaMailSender   mailSender;
+
+    @Value("${app.frontend-url:http://localhost:5173}")
+    private String frontendUrl;
 
     @Transactional
     public AuthResponse login(LoginRequest req) {
@@ -80,17 +89,60 @@ public class AuthService {
         return AuthResponse.of(token, userService.toResponse(saved));
     }
 
-    /**
-     * Forgot password — in production, send an email with a reset link.
-     * For now, just confirm the email exists without revealing it.
-     */
-    @Transactional(readOnly = true)
+    @Transactional
     public void forgotPassword(String email) {
-        // Always respond the same way — don't reveal if email exists (security)
         userRepository.findByEmail(email).ifPresent(user -> {
-            // TODO: generate reset token, send email
-            log.info("Password reset requested for: {}", email);
+
+            // Block OAuth-only accounts from using password reset
+            if (user.getPassword() == null) {
+                log.info("Password reset skipped for OAuth user: {}", email);
+                return;
+            }
+
+            // Generate a secure random token valid for 1 hour
+            String token = UUID.randomUUID().toString();
+            user.setResetToken(token);
+            user.setResetTokenExpiry(LocalDateTime.now().plusHours(1));
+            userRepository.save(user);
+
+            // Send the reset email
+            String resetLink = frontendUrl + "/reset-password?token=" + token;
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(email);
+            message.setSubject("CampusFlow — Password Reset Request");
+            message.setText(
+                "Hi " + user.getFullName() + ",\n\n" +
+                "We received a request to reset your CampusFlow password.\n\n" +
+                "Click the link below to reset it (valid for 1 hour):\n" +
+                resetLink + "\n\n" +
+                "If you did not request this, you can safely ignore this email.\n\n" +
+                "— The CampusFlow Team"
+            );
+
+            try {
+                mailSender.send(message);
+                log.info("Password reset email sent to: {}", email);
+            } catch (Exception e) {
+                log.error("Failed to send reset email to {}: {}", email, e.getMessage());
+            }
         });
     }
-}
 
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        User user = userRepository.findByResetToken(token)
+                .orElseThrow(() -> new BadRequestException("Invalid or expired reset token."));
+
+        if (user.getResetTokenExpiry() == null ||
+            user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new BadRequestException("Reset token has expired. Please request a new one.");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+        userRepository.save(user);
+
+        log.info("Password reset successfully for: {}", user.getEmail());
+    }
+}

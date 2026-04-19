@@ -10,6 +10,8 @@ import com.smartcampus.security.UserPrincipal;
 import com.smartcampus.service.AuthService;
 import com.smartcampus.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +51,7 @@ public class AuthController {
                 .body(ApiResponse.success("Account created successfully", resp));
     }
 
-    /** Forgot password — sends reset link (stubbed) */
+    /** Forgot password — sends reset link to email */
     @PostMapping("/forgot-password")
     public ResponseEntity<ApiResponse<Void>> forgotPassword(
             @Valid @RequestBody ForgotPasswordRequest req) {
@@ -57,4 +59,17 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success(
                 "If an account exists with that email, a reset link has been sent.", null));
     }
+
+    /** Reset password using token from email */
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(
+            @RequestParam String token,
+            @RequestBody ResetPasswordBody body) {
+        authService.resetPassword(token, body.password());
+        return ResponseEntity.ok(ApiResponse.success("Password reset successfully.", null));
+    }
+
+    record ResetPasswordBody(
+        @NotBlank @Size(min = 8) String password
+    ) {}
 }
