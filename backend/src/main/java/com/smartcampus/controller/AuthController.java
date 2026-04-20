@@ -73,3 +73,5 @@ public class AuthController {
         @NotBlank @Size(min = 8) String password
     ) {}
 }
+
+

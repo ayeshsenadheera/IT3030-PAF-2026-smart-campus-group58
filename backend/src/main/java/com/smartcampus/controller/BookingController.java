@@ -29,7 +29,6 @@ public class BookingController {
 
     private final BookingService bookingService;
 
-    // Technician ට booking create කරන්න බෑ — ADMIN සහ USER විතරයි
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<ApiResponse<BookingResponse>> create(
@@ -52,7 +51,7 @@ public class BookingController {
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
-    // Technician ට /my bookings access කරන්නත් බෑ
+
     @GetMapping("/my")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<ApiResponse<PagedResponse<BookingResponse>>> getMyBookings(
