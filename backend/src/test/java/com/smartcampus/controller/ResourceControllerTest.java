@@ -6,14 +6,21 @@ import com.smartcampus.dto.response.PagedResponse;
 import com.smartcampus.dto.response.ResourceResponse;
 import com.smartcampus.enums.ResourceStatus;
 import com.smartcampus.enums.ResourceType;
+import com.smartcampus.security.CustomUserDetailsService;
+import com.smartcampus.security.JwtTokenProvider;
 import com.smartcampus.service.ResourceService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -23,14 +30,24 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ResourceController.class)
+@WebMvcTest(
+        controllers = ResourceController.class,
+        excludeAutoConfiguration = {
+                SecurityAutoConfiguration.class,
+                SecurityFilterAutoConfiguration.class,
+                OAuth2ClientAutoConfiguration.class
+        }
+)
 @DisplayName("ResourceController Integration Tests")
+@ActiveProfiles("test")
 class ResourceControllerTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired ObjectMapper objectMapper;
 
     @MockBean ResourceService resourceService;
+    @MockBean JwtTokenProvider jwtTokenProvider;
+    @MockBean CustomUserDetailsService customUserDetailsService;
 
     @Test
     @DisplayName("GET /api/resources should return 200 with paged resources")
@@ -45,7 +62,7 @@ class ResourceControllerTest {
 
         when(resourceService.search(any(), any(), any(), any(Pageable.class))).thenReturn(paged);
 
-        mockMvc.perform(get("/api/resources"))
+        mockMvc.perform(get("/api/resources").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.content[0].name").value("Lecture Hall A"))
@@ -62,7 +79,7 @@ class ResourceControllerTest {
 
         when(resourceService.getById(5L)).thenReturn(res);
 
-        mockMvc.perform(get("/api/resources/5"))
+        mockMvc.perform(get("/api/resources/5").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(5))
                 .andExpect(jsonPath("$.data.type").value("LAB"));
