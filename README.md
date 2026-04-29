@@ -1,5 +1,5 @@
 # CampusFlow — Smart Campus Operations Hub
-IT3030 PAF Assignment 2026 — Group 69
+IT3030 PAF Assignment 2026 — Group 58
 
 ## Tech Stack
 - Backend: Spring Boot 3.2 + Java 17 + MySQL
