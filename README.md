@@ -1,10 +1,14 @@
 # CampusFlow — Smart Campus Operations Hub
+<<<<<<< HEAD
 
 > IT3030 Programming and Frameworks (PAF) Assignment 2026 — Group 58
 
 CampusFlow is a full-stack web application designed to streamline campus operations at SLIIT. It provides a centralized platform for managing facility bookings, support tickets, resources, and real-time notifications — all with role-based access control.
 
 ---
+=======
+IT3030 PAF Assignment 2026 — Group 58
+>>>>>>> 126d09b709bd70fbb002c4b9aca98d178a3e6c01
 
 ## Tech Stack
 
