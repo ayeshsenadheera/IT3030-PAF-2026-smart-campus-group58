@@ -8,7 +8,6 @@ CampusFlow is a full-stack web application designed to streamline campus operati
 ---
 =======
 IT3030 PAF Assignment 2026 — Group 58
->>>>>>> 126d09b709bd70fbb002c4b9aca98d178a3e6c01
 
 ## Tech Stack
 
